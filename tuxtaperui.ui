@@ -28,6 +28,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
+   </property>
    <property name="text">
     <string>Pause</string>
    </property>
@@ -47,6 +50,9 @@
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
    </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
+   </property>
    <property name="text">
     <string>Stop</string>
    </property>
@@ -65,6 +71,9 @@
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
    </property>
    <property name="text">
     <string>Advance</string>
@@ -87,6 +96,9 @@
    </property>
    <property name="cursor">
     <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
    </property>
    <property name="text">
     <string>Rewind</string>
@@ -113,6 +125,9 @@
    <property name="styleSheet">
     <string notr="true">color: green;
 selection-background-color: rgb(16, 255, 16);</string>
+   </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
    </property>
    <property name="text">
     <string>Play</string>
@@ -362,6 +377,9 @@ selection-background-color: rgb(16, 255, 16);</string>
    <property name="styleSheet">
     <string notr="true">color: red;</string>
    </property>
+   <property name="locale">
+    <locale language="English" country="UnitedStates"/>
+   </property>
    <property name="text">
     <string extracomment="Save audio">Record</string>
    </property>
@@ -372,11 +390,17 @@ selection-background-color: rgb(16, 255, 16);</string>
   <widget class="QLabel" name="labelTape">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>90</y>
+     <x>60</x>
+     <y>60</y>
      <width>391</width>
      <height>251</height>
     </rect>
+   </property>
+   <property name="autoFillBackground">
+    <bool>false</bool>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-image: url(./graphics/cassetteempty.jpg);</string>
    </property>
    <property name="text">
     <string/>
@@ -389,8 +413,8 @@ selection-background-color: rgb(16, 255, 16);</string>
    <property name="geometry">
     <rect>
      <x>60</x>
-     <y>50</y>
-     <width>321</width>
+     <y>330</y>
+     <width>451</width>
      <height>41</height>
     </rect>
    </property>
