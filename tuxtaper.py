@@ -1,5 +1,7 @@
-import sys, re
+import os, sys, re
 from tuxtaperui import *
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtGui import QIcon, QPixmap
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -28,7 +30,14 @@ class MainWindow(QtWidgets.QMainWindow):
         print("Advance")
 
     def press_stop(self):
+        filter: object
         filename, filter = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", ".")
+        self.ui.labelTape = QtWidgets.QLabel(self.ui.labelTape)
+        if filename == "":
+            self.ui.labelTape.setPixmap(QPixmap("graphics/cassetteempty.jpg"))
+        else:
+            self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
+        self.ui.labelTape.show()
         self.ui.labelFilename.setText(filename)
         print("Stop")
 
