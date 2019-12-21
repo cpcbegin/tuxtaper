@@ -1,11 +1,11 @@
 import PyQt5.QtCore as C
 import os, sys, re
 from tuxtaperui import *
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMessageBox
 from PyQt5.QtGui import QIcon, QPixmap
 import pygame
 from pygame.locals import *
-from tkinter import messagebox
+import mimetypes
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -13,6 +13,7 @@ class MainWindow(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self, parent)
         self.ui = Ui_FormMain()
         self.ui.setupUi(self)
+        self.mime_tzx = [".cdt", ".tzx"]
         self.sound_running = False
         self.sound_paused = False
 
@@ -24,8 +25,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButtonPause.clicked.connect(self.press_pause)
 
     def press_record(self):
-        messagebox.showinfo("Warning", "Record: NOT IMPLEMENTED YET")
-        print("Record: NOT IMPLEMENTED YET")
+        msg = QMessageBox()
+        msg.setWindowTitle("Warning")
+        msg.setText("Record: NOT IMPLEMENTED YET")
+        x = msg.exec_()
 
     def press_play(self):
         if (pygame.mixer.music.load(self.ui.labelFilename.text()) != ""):
@@ -33,7 +36,6 @@ class MainWindow(QtWidgets.QMainWindow):
             pygame.mixer.music.play(1)
             self.sound_running = True
             self.ui.labelTape.setPixmap(QPixmap("graphics/cassetteplay.gif"))
-            print("play")
 
     def press_rewind(self):
         if self.sound_running:
@@ -53,13 +55,27 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             filter: object
             filename, filter = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", ".")
+            nombre, extension = os.path.splitext(filename)
             self.ui.labelTape = QtWidgets.QLabel(self.ui.labelTape)
             if filename == "":
                 self.ui.labelTape.setPixmap(QPixmap("graphics/cassetteempty.jpg"))
+                self.ui.labelTape.show()
             else:
-                self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
-            self.ui.labelTape.show()
-            self.ui.labelFilename.setText(filename)
+                if str(mimetypes.guess_type(filename)).find("audio") >= 0:
+                    self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
+                    self.ui.labelTape.show()
+                    self.ui.labelFilename.setText(filename)
+                elif extension.lower() in self.mime_tzx:
+                    os.system("playtzx '" + filename +"' -voc")
+                    os.system("sox -t voc " + nombre + ".VOC -e signed-integer " + nombre + ".wav")
+                    self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
+                    self.ui.labelTape.show()
+                    self.ui.labelFilename.setText(nombre + ".wav")
+                else:
+                    msg = QMessageBox()
+                    msg.setWindowTitle("Warning")
+                    msg.setText("NO ES UN ARCHIVO DE AUDIO " + extension)
+                    x = msg.exec_()
 
     def press_pause(self):
         if self.sound_paused:

@@ -15,9 +15,14 @@ Para que funcione tienes que instalar los siguientes paquetes en tu distro:
 - python3-python-utils
 - python3-setuptools
 - python3-pyqt5.qtmultimedia
+- sox
 
 Y los siguientes mediante el comando `pip3 install paquete`:
 - pygame
+
+También hay que compilar e instalar playtzx que está incluido en cpctools.
+https://github.com/cpcsdk/cpctools
+
 
 ## Uso
 Ejecuta el siguiente comando desde la carpeta donde hayas descargado:
@@ -34,3 +39,4 @@ Es una versión preliminar por lo que puede tener muchos fallos y cosas por mejo
 - Mejorar esta ayuda.
 - Hacerlo adaptativo al tamaño disponible de pantalla.
 - Reducir el número de librerías necesarias para reducir uso de recursos y facilitar el uso multisistema.
+- Solucionar bug con rutas con espacios.
