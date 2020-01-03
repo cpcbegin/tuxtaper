@@ -1,11 +1,15 @@
-import PyQt5.QtCore as C
-import os, sys, re
-from tuxtaperui import *
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMessageBox
-from PyQt5.QtGui import QIcon, QPixmap
-import pygame
-from pygame.locals import *
 import mimetypes
+import re
+import sys
+import subprocess
+import pathlib
+
+import PyQt5.QtCore as C
+import pygame
+from PyQt5.QtGui import QIcon, QPixmap
+from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QMessageBox
+from pygame.locals import *
+from tuxtaperui import *
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -55,7 +59,6 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             filter: object
             filename, filter = QtWidgets.QFileDialog.getOpenFileName(self, "Open file", ".")
-            nombre, extension = os.path.splitext(filename)
             self.ui.labelTape = QtWidgets.QLabel(self.ui.labelTape)
             if filename == "":
                 self.ui.labelTape.setPixmap(QPixmap("graphics/cassetteempty.jpg"))
@@ -65,12 +68,13 @@ class MainWindow(QtWidgets.QMainWindow):
                     self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
                     self.ui.labelTape.show()
                     self.ui.labelFilename.setText(filename)
-                elif extension.lower() in self.mime_tzx:
-                    os.system("playtzx '" + filename +"' -voc")
-                    os.system("sox -t voc " + nombre + ".VOC -e signed-integer " + nombre + ".wav")
+                elif pathlib.Path(filename).suffix.lower() in self.mime_tzx:
+                    subprocess.run(["playtzx", filename, "-voc"])
+                    subprocess.run(["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
+                                    pathlib.PurePath(filename).with_suffix(".wav")])
                     self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
                     self.ui.labelTape.show()
-                    self.ui.labelFilename.setText(nombre + ".wav")
+                    self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
                 else:
                     msg = QMessageBox()
                     msg.setWindowTitle("Warning")
