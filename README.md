@@ -20,8 +20,9 @@ Para que funcione tienes que instalar los siguientes paquetes en tu distro:
 Y los siguientes mediante el comando `pip3 install paquete`:
 - pygame
 
-También hay que compilar e instalar playtzx que está incluido en cpctools.
+También hay que compilar e instalar los conversores de tzx/cdt y cas que están incluido en cpctools y castools.
 https://github.com/cpcsdk/cpctools
+https://github.com/joyrex2001/castools
 
 
 ## Uso

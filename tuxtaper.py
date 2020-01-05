@@ -18,6 +18,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui = Ui_FormMain()
         self.ui.setupUi(self)
         self.mime_tzx = [".cdt", ".tzx"]
+        self.mime_cas = [".cas"]
         self.sound_running = False
         self.sound_paused = False
 
@@ -35,7 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
         x = msg.exec_()
 
     def press_play(self):
-        if (pygame.mixer.music.load(self.ui.labelFilename.text()) != ""):
+        if self.ui.labelFilename.text() != "":
             pygame.mixer.music.load(self.ui.labelFilename.text())
             pygame.mixer.music.play(1)
             self.sound_running = True
@@ -72,6 +73,11 @@ class MainWindow(QtWidgets.QMainWindow):
                     subprocess.run(["playtzx", filename, "-voc"])
                     subprocess.run(["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
                                     pathlib.PurePath(filename).with_suffix(".wav")])
+                    self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
+                    self.ui.labelTape.show()
+                    self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
+                elif pathlib.Path(filename).suffix.lower() in self.mime_cas:
+                    subprocess.run(["cas2wav", filename, pathlib.PurePath(filename).with_suffix(".wav")])
                     self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
                     self.ui.labelTape.show()
                     self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
