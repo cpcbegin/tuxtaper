@@ -29,6 +29,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButtonStop.clicked.connect(self.press_stop)
         self.ui.pushButtonPause.clicked.connect(self.press_pause)
 
+    def command_player(self, filename):
+        tape_extension = {
+            ".cdt": [["playtzx", filename, "-voc"],
+                    ["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
+                    pathlib.PurePath(filename).with_suffix(".wav")]],
+            ".tzx": [["playtzx", filename, "-voc"],
+                    ["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
+                     pathlib.PurePath(filename).with_suffix(".wav")]],
+            ".cas": [["cas2wav", filename, pathlib.PurePath(filename).with_suffix(".wav")]]
+        }
+        extension = pathlib.Path(filename).suffix.lower()
+        if str(mimetypes.guess_type(filename)).find("audio") >= 0:
+            self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
+            self.ui.labelTape.show()
+            self.ui.labelFilename.setText(filename)
+        elif extension in tape_extension:
+            for tape_commands in tape_extension[extension]:
+                subprocess.run(tape_commands)
+            self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
+            self.ui.labelTape.show()
+            self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
+        else:
+            msg = QMessageBox()
+            msg.setWindowTitle("Warning")
+            msg.setText("NO ES UN ARCHIVO DE AUDIO " + extension)
+            x = msg.exec_()
+
     def press_record(self):
         msg = QMessageBox()
         msg.setWindowTitle("Warning")
@@ -65,27 +92,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.ui.labelTape.setPixmap(QPixmap("graphics/cassetteempty.jpg"))
                 self.ui.labelTape.show()
             else:
-                if str(mimetypes.guess_type(filename)).find("audio") >= 0:
-                    self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
-                    self.ui.labelTape.show()
-                    self.ui.labelFilename.setText(filename)
-                elif pathlib.Path(filename).suffix.lower() in self.mime_tzx:
-                    subprocess.run(["playtzx", filename, "-voc"])
-                    subprocess.run(["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
-                                    pathlib.PurePath(filename).with_suffix(".wav")])
-                    self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
-                    self.ui.labelTape.show()
-                    self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
-                elif pathlib.Path(filename).suffix.lower() in self.mime_cas:
-                    subprocess.run(["cas2wav", filename, pathlib.PurePath(filename).with_suffix(".wav")])
-                    self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
-                    self.ui.labelTape.show()
-                    self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
-                else:
-                    msg = QMessageBox()
-                    msg.setWindowTitle("Warning")
-                    msg.setText("NO ES UN ARCHIVO DE AUDIO " + extension)
-                    x = msg.exec_()
+                self.command_player(filename)
 
     def press_pause(self):
         if self.sound_paused:
