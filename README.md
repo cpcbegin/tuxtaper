@@ -1,6 +1,6 @@
 # TuxTaper
-TuxTaper es un reproductor de medios que soporta volcados de cinta TZX/CDT usados por emuladores de ZX Spectrum y Amstrad CPC y diversos formatos de audio.
-Esta pensado para usarse con una raspberry pi mediante una pantalla hat pero se puede usar en cualquier GNU/Linux y otros sistemas.
+TuxTaper es un reproductor de medios que soporta diversos formatos de volcados de cinta usados por emuladores y dispositivos especiales de ordenadores de 8 bits y algunos formatos de audio.
+Esta pensado para usarse con una raspberry pi mediante una pantalla hat pero se puede usar en cualquier otro GNU/Linux.
 
 ![TuxTaper screenshot](https://raw.githubusercontent.com/cpcbegin/tuxtaper/master/graphics/tuxtaper_screenshot.png)
 
@@ -20,9 +20,10 @@ Para que funcione tienes que instalar los siguientes paquetes en tu distro:
 Y los siguientes mediante el comando `pip3 install paquete`:
 - pygame
 
-También hay que compilar e instalar los conversores de tzx/cdt y cas que están incluido en cpctools y castools.
-https://github.com/cpcsdk/cpctools
-https://github.com/joyrex2001/castools
+También hay que compilar e instalar los conversores de tzx/cdt (ZX Spectrum / Amstrad CPC), tap (Commodore) y cas (MSX) que están incluidos en cpctools, ubercassette y castools respectivamente:
+- ![https://github.com/cpcsdk/cpctools](https://github.com/cpcsdk/cpctools)
+- ![https://github.com/DusteDdk/ubercassette](https://github.com/DusteDdk/ubercassette)
+- ![https://github.com/joyrex2001/castools](https://github.com/joyrex2001/castools)
 
 
 ## Uso

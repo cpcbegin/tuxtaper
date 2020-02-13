@@ -21,6 +21,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mime_cas = [".cas"]
         self.sound_running = False
         self.sound_paused = False
+        self.vocfile = ""
+        self.wavfile = ""
 
         self.ui.pushButtonRecord.clicked.connect(self.press_record)
         self.ui.pushButtonPlay.clicked.connect(self.press_play)
@@ -30,14 +32,17 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButtonPause.clicked.connect(self.press_pause)
 
     def command_player(self, filename):
+        self.vocfile = pathlib.PurePath(filename).with_suffix(".VOC")
+        self.wavfile = pathlib.PurePath(filename).with_suffix(".wav")
         tape_extension = {
             ".cdt": [["playtzx", filename, "-voc"],
-                    ["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
+                    ["sox", "-t", "voc", self.vocfile,
                     pathlib.PurePath(filename).with_suffix(".wav")]],
             ".tzx": [["playtzx", filename, "-voc"],
-                    ["sox", "-t", "voc", pathlib.PurePath(filename).with_suffix(".VOC"),
+                    ["sox", "-t", "voc", self.vocfile,
                      pathlib.PurePath(filename).with_suffix(".wav")]],
-            ".cas": [["cas2wav", filename, pathlib.PurePath(filename).with_suffix(".wav")]]
+            ".tap": [["ubercassette", filename, self.wavfile]],
+            ".cas": [["cas2wav", filename, self.wavfile]]
         }
         extension = pathlib.Path(filename).suffix.lower()
         if str(mimetypes.guess_type(filename)).find("audio") >= 0:
@@ -49,7 +54,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 subprocess.run(tape_commands)
             self.ui.labelTape.setPixmap(QPixmap("graphics/cassettefull.jpg"))
             self.ui.labelTape.show()
-            self.ui.labelFilename.setText(str(pathlib.PurePath(filename).with_suffix(".wav")))
+            self.ui.labelFilename.setText(str(self.wavfile))
+            self.inputfile = self.wavfile;
         else:
             msg = QMessageBox()
             msg.setWindowTitle("Warning")
